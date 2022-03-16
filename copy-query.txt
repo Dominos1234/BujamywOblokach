@@ -1,0 +1,4 @@
+COPY champions(id,name, hp, hp_plus, hp5, hp5_plus, mp, mp_plus, mp5, mp5_plus)
+FROM 'D:\STUDIA\BujamywOblokach\Database\champions.csv'
+DELIMITER ';'
+CSV HEADER;
