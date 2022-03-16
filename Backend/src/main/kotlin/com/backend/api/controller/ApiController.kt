@@ -14,15 +14,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import java.util.*
 
-
-@Configuration
-@EnableWebMvc
-class WebConfig : WebMvcConfigurerAdapter() {
-    override fun addCorsMappings(registry: CorsRegistry) {
-        registry.addMapping("/**")
-    }
-}
-
 @RestController
 @RequestMapping("api")
 class ApiController {

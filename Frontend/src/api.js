@@ -18,14 +18,13 @@ api.get = async name => {
     return json;
 };
 
-api.post = async champion => {
-//    champion = {...champion};
+api.post = async (champion, createNew = false) => {
     const url = `${api.server}/champion`;
 
     console.log(champion);
 
     console.log(JSON.stringify(champion));
-    const result = await fetch(url, {method: 'POST', headers: api.headers, body: JSON.stringify(champion)});
+    const result = await fetch(url, {method: createNew ? 'PUT' : 'POST', headers: api.headers, body: JSON.stringify(champion)});
     if(!result.ok) {
         return false;
     } else {
