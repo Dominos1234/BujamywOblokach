@@ -32,7 +32,7 @@ class ApiController {
 
     @GetMapping("champions")
     
-    fun getChampions() = repository.findAll()
+    fun getChampions() = repository.findByOrderByIdAsc()
     
     @GetMapping("champion")
 
@@ -66,8 +66,16 @@ class ApiController {
     fun editChampion(@RequestBody editedChampion: Champion) : ResponseEntity<Any> {
         try {
             val champion: Champion = repository.findById(editedChampion.id).get()
-            println(editedChampion.name);
-            repository.save(editedChampion)
+            champion.name = editedChampion.name
+            champion.hp = editedChampion.hp
+            champion.hp_plus = editedChampion.hp_plus
+            champion.hp5 = editedChampion.hp5
+            champion.mp5_plus = editedChampion.hp5_plus
+            champion.mp = editedChampion.mp
+            champion.mp_plus = editedChampion.mp_plus
+            champion.mp5 = editedChampion.mp5
+            champion.mp5_plus = editedChampion.mp5_plus
+            repository.save(champion)
             return ResponseEntity("", HttpStatus.OK)
         } catch (e: DataIntegrityViolationException) {
             return ResponseEntity("{\"error\":\"Name already exists\"}", HttpStatus.CONFLICT)
