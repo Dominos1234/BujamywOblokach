@@ -1,17 +1,27 @@
 package com.backend.api.controller
+
 import com.backend.api.model.Champion
 import com.backend.api.repo.ChampionsRepository
+import org.hibernate.annotations.DynamicUpdate
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Configuration
 import org.springframework.dao.DataIntegrityViolationException
-import org.springframework.data.jpa.repository.Query
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import java.util.*
-import javax.persistence.EntityManager
-import javax.persistence.PersistenceContext
-import kotlin.NoSuchElementException
+
+
+@Configuration
+@EnableWebMvc
+class WebConfig : WebMvcConfigurerAdapter() {
+    override fun addCorsMappings(registry: CorsRegistry) {
+        registry.addMapping("/**")
+    }
+}
 
 @RestController
 @RequestMapping("api")
@@ -21,9 +31,11 @@ class ApiController {
     lateinit var repository: ChampionsRepository
 
     @GetMapping("champions")
+    
     fun getChampions() = repository.findAll()
-
+    
     @GetMapping("champion")
+
     fun getChampionByName(@RequestParam(required = false) id: Long?, @RequestParam(required = false) name: String?) : ResponseEntity<Optional<Champion>>{
         if (id != null && name != null) {
             return checkIfNull(repository.findByIdAndName(id, name))
@@ -36,6 +48,7 @@ class ApiController {
     }
 
     @PutMapping("champion", produces = ["application/json"])
+    
     @ResponseBody
     fun addChampion(@RequestBody champion: Champion) : ResponseEntity<Any> {
         try {
@@ -48,10 +61,12 @@ class ApiController {
     }
 
     @PostMapping("champion", produces = ["application/json"])
+    
     @ResponseBody
     fun editChampion(@RequestBody editedChampion: Champion) : ResponseEntity<Any> {
         try {
             val champion: Champion = repository.findById(editedChampion.id).get()
+            println(editedChampion.name);
             repository.save(editedChampion)
             return ResponseEntity("", HttpStatus.OK)
         } catch (e: DataIntegrityViolationException) {
@@ -62,6 +77,7 @@ class ApiController {
     }
 
     @GetMapping("stats", produces = ["application/json"])
+    
     @ResponseBody
     fun getStats() : ResponseEntity<Any>{
         val query = repository.getStats()
