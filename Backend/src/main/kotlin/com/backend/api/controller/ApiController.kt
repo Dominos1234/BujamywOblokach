@@ -14,6 +14,15 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import java.util.*
 
+@Configuration
+@EnableWebMvc
+class WebConfig : WebMvcConfigurerAdapter() {
+    override fun addCorsMappings(registry: CorsRegistry) {
+        registry.addMapping("/**")
+                .allowedMethods("*")
+    }
+}
+
 @RestController
 @RequestMapping("api")
 class ApiController {
@@ -48,7 +57,7 @@ class ApiController {
         } catch (e: DataIntegrityViolationException) {
             return ResponseEntity("{\"error\":\"Record already exists\"}", HttpStatus.CONFLICT)
         }
-
+        
     }
 
     @PostMapping("champion", produces = ["application/json"])
@@ -80,7 +89,7 @@ class ApiController {
                 "\"avg_mp\" : ${query.avg_mp}," +
                 "\"avg_mp_plus\" : ${query.avg_mp_plus}," +
                 "\"avg_mp5\" : ${query.avg_mp5}," +
-                "\"avg_mp5_plus\" : ${query.avg_mp5_plus}," +
+                "\"avg_mp5_plus\" : ${query.avg_mp5_plus}" +
                 "}", HttpStatus.OK)
     }
 

@@ -1,4 +1,7 @@
 <script>
+import { api } from './api';
+import {utils} from './utils.js';
+
 import Selector from './Selector.svelte';
 
 export let paginationOptions;
@@ -7,6 +10,8 @@ export let selectedPaginationOption;
 export let currentPage;
 export let onSetCurrentPage;
 export let pagesCount = 0;
+export let queryName;
+export let findByName;
 
 
 const toArray = number => {
@@ -16,11 +21,30 @@ const toArray = number => {
         return Array.from(Array(number).keys());
     }
 };
+
+const showStats = async () => {
+    const stats = await api.stats();
+    if(stats) {
+        let str = '';
+        Object.keys(stats).forEach((key) => {
+            str += `${key}: ${utils.formatNumber(stats[key])}\n`;
+        });
+        alert(str);
+    }
+};
 </script>
 
 <div class="placeholder">
 </div>
 <div class="container-fluid mainContainer">
+    <div class="row">
+        <h5 class="col">Show stats:</h5>
+        <button class="col btn btn-primary" on:click={showStats}> Show stats</button>
+    </div>
+    <div class="row">
+        <h5 class="col">Find by name:</h5>
+        <input  type="text" class="col" bind:value={queryName} on:input={newValue => {findByName(newValue)}}/>
+    </div>
     <div class="row">
         <h5>Page:</h5>
     </div>

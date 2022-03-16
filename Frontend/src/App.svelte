@@ -7,6 +7,7 @@
 	import Table from './Table.svelte';
 
 	let champions = [];
+	let queryName;
 	let selectedPaginationOption = 10;
 	
 	$: paginationOptions = (recordsCount => {
@@ -27,21 +28,44 @@
 	let currentPage = 0;
 	$: pagesCount = Math.ceil(champions.length / selectedPaginationOption);
 	
-	onMount(async () => {
+	const updateRecords = async () => {
 		const fetchedChampions = await api.get();
 		if(fetchedChampions) {
 			champions = fetchedChampions;
 			console.log(champions);
 		}
+	};
+
+	onMount(async () => {
+		updateRecords();
 	});
+
+	const findByName = async newValue => {
+		newValue = newValue.target.value;
+		console.log(newValue);
+		if(newValue) {
+			const fetchedChampion = await api.get(newValue);
+			if(fetchedChampion) {
+				champions = [fetchedChampion];
+			}
+		} else {
+			const fetchedChampions = await api.get();
+			if(fetchedChampions) {
+				champions = fetchedChampions;
+			}
+		}
+	}; 
 
 
 </script>
 
 <main>
-	<Table records={champions} currentPage={currentPage} pagesCount={pagesCount} pageSize={selectedPaginationOption}></Table>
+	<Table updateRecords={updateRecords} records={champions} currentPage={currentPage} pagesCount={pagesCount} pageSize={selectedPaginationOption}></Table>
 	
-	<Panel paginationOptions={paginationOptions}
+	<Panel
+		queryName={queryName}
+		findByName={findByName}
+		paginationOptions={paginationOptions}
 		selectedPaginationOption={selectedPaginationOption}
 		onSelectPaginationOption={paginationOption => {selectedPaginationOption = paginationOption; currentPage = 0;}}
 		pagesCount ={pagesCount}

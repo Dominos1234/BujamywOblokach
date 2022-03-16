@@ -12,4 +12,6 @@ interface ChampionsRepository: CrudRepository<Champion, Long>, StatisticsReposit
 
     fun findByIdAndName(id: Long, name: String): Optional<Champion>
 
+    fun findByOrderByIdAsc() : List<Champion>
+
 }

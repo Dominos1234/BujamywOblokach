@@ -7,6 +7,7 @@ export let records = [];
 export let currentPage = 0;
 export let pagesCount;
 export let pageSize;
+export let updateRecords;
 
 $: currentRecords = ((currentPage, pagesCount)=>{
     if(!pagesCount) {
@@ -18,7 +19,7 @@ $: currentRecords = ((currentPage, pagesCount)=>{
 
 <div class="container-fluid">
     <TableHeader columnNames={records.length > 0 ? Object.keys(records[0]) : ['#','#','#','#','#','#','#','#','#','#','#','#','#']} />
-        <AddNewRow sampleRecord={records.length > 0 ? records[0] : null} />
+        <AddNewRow updateRecords={updateRecords} records={records} sampleRecord={records.length > 0 ? records[0] : null} />
         {#each currentRecords as record(record.id)}
         <TableRow record={record}/>
     {/each}
