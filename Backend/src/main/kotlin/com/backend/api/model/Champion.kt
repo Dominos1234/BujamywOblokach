@@ -1,8 +1,10 @@
 package com.backend.api.model
 
+import org.hibernate.annotations.DynamicUpdate
 import javax.persistence.*
 
 @Entity
+@DynamicUpdate
 @Table(name = "champions")
 class Champion(
 
