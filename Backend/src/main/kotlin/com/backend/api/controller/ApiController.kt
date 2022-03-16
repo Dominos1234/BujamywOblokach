@@ -3,14 +3,11 @@ import com.backend.api.model.Champion
 import com.backend.api.repo.ChampionsRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
-import org.springframework.data.jpa.repository.Query
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
-import javax.persistence.EntityManager
-import javax.persistence.PersistenceContext
+import org.springframework.data.domain.Sort
 import kotlin.NoSuchElementException
 
 @RestController
@@ -21,7 +18,7 @@ class ApiController {
     lateinit var repository: ChampionsRepository
 
     @GetMapping("champions")
-    fun getChampions() = repository.findAll()
+    fun getChampions() = repository.findByOrderByIdAsc()
 
     @GetMapping("champion")
     fun getChampionByName(@RequestParam(required = false) id: Long?, @RequestParam(required = false) name: String?) : ResponseEntity<Optional<Champion>>{
@@ -52,7 +49,16 @@ class ApiController {
     fun editChampion(@RequestBody editedChampion: Champion) : ResponseEntity<Any> {
         try {
             val champion: Champion = repository.findById(editedChampion.id).get()
-            repository.save(editedChampion)
+            champion.name = editedChampion.name
+            champion.hp = editedChampion.hp
+            champion.hp_plus = editedChampion.hp_plus
+            champion.hp5 = editedChampion.hp5
+            champion.hp5_plus = editedChampion.hp5_plus
+            champion.mp = editedChampion.mp
+            champion.mp_plus = editedChampion.mp_plus
+            champion.mp5 = editedChampion.mp5
+            champion.mp5_plus = editedChampion.mp5_plus
+            repository.save(champion)
             return ResponseEntity("", HttpStatus.OK)
         } catch (e: DataIntegrityViolationException) {
             return ResponseEntity("{\"error\":\"Name already exists\"}", HttpStatus.CONFLICT)
