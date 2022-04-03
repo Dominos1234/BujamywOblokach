@@ -1,6 +1,6 @@
 export let api = {};
 
-api.server = `http://127.0.0.1:8080/api`;
+api.server = `http://127.0.0.1:8081/api`;
 api.headers = {Accept: '*/*', 'Content-Type': 'application/json'};
 
 api.get = async name => {
