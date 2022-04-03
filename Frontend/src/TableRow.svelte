@@ -24,7 +24,7 @@
 <div class="row">
     {#each Object.keys(record) as key}
         <div class="col d-flex align-items-center">
-            <input bind:value={record[key]} />
+            <input disabled={key == 'id'} bind:value={record[key]} />
         </div>
     {/each}
     <div class="col d-flex align-items-center">
